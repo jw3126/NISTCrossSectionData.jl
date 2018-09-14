@@ -1,6 +1,6 @@
 using DataFrames
 using Unitful
-using Unitful: uconvert, NoUnits, cm, g, eV, MeV
+using Unitful: uconvert, NoUnits, cm, g, eV, MeV, u
 using PeriodicTable: Element
 import CSV
 
@@ -32,12 +32,16 @@ lower_material(el::Element) = el.number
 # const MeV = 10^6eV
 lower_energy(E) = Float64(uconvert(NoUnits, E/MeV))
 
-_ucoalesce_density(q::Quantity) = uconvert(g*cm^-3, q)
-_ucoalesce_density(x::Number) = x*g*cm^-3
+_ucoalesce(unit, q::Quantity) = uconvert(unit, q)
+_ucoalesce(unit, x::Number  ) = x*unit
 
 function density(el::Element)
-    _ucoalesce_density(el.density)
+    _ucoalesce(g*cm^-3, el.density)
 end
+
+# function number_density(el::Element)
+#     q = density(el) / _ucoalesce(u, el.atomic_mass)
+# end
 
 function lookup_mass_coeff(Z::Int,E::Float64, col::Symbol)
     table = MU_EN_TABLES[Z]

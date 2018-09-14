@@ -2,7 +2,7 @@ using NISTCrossSectionData
 const P = NISTCrossSectionData
 using Test
 using PeriodicTable
-using Unitful: cm, g
+using Unitful: cm, g, MeV, eV
 
 @testset "implementation details" begin
     @test P.linterpol(1.7, 1=>10, 2=>20) ≈ 17
@@ -27,4 +27,12 @@ end
     @test mass_coeff(U, E_K₋, EnergyAbsorption) ≈ 1.027unit rtol=1e-2
     @test mass_coeff(U, E_K₊, TotalAttenuation) ≈ 4.893unit rtol=1e-2
     @test mass_coeff(U, E_K₊, EnergyAbsorption) ≈ 1.382unit rtol=1e-2
+end
+
+@testset "api" begin
+    oxygen = elements[8];
+    mass_coeff(      oxygen,  1MeV, EnergyAbsorption)
+    mean_free_path(  oxygen,  1MeV, TotalAttenuation)
+    attenuation_coeff(oxygen, 10MeV, EnergyAbsorption)
+    cross_section(  oxygen,  1MeV, TotalAttenuation)
 end
