@@ -21,7 +21,10 @@ end
 
 function linterpol(x, (x_lo, y_lo), (x_hi, y_hi))
     @assert x_lo <= x <= x_hi
-    x_lo == x_hi && return y_lo
+    if x_lo == x_hi 
+        @assert y_lo == y_hi
+        return y_lo
+    end
     w = x_hi - x_lo
     @assert w > 0
     w_hi = (x - x_lo) / w
@@ -45,19 +48,26 @@ function lookup_mass_coeff(s::DataSource,
 end
 
 function _lookup_mass_coeff(s::DataSource,Z::Int,E::Float64, col::Symbol)
+    unit = cm^2/g
     table = s.tables[Z]
     Es::Vector{Float64} = table[:E]
     Cs::Vector{Float64} = table[col]
     E_min = first(Es)
     E_max = last(Es)
     @assert E_min <= E <= E_max
-    E == E_min && return first(Cs)
+    E == E_min && return first(Cs) * unit
     index_hi = searchsortedfirst(Es, E)
     index_lo = index_hi - 1
     E_lo = Es[index_lo]
     E_hi = Es[index_hi]
+    # check for absorption edge
+    absorption_edge = (E == E_hi) &&
+        (get(Es, index_hi+1, NaN) == E_hi)
+    if absorption_edge
+        msg = "Element Z=$Z has an absorption edge at E=$(E)MeV."
+        throw(ArgumentError(msg))
+    end
     c_lo = Cs[index_lo]
     c_hi = Cs[index_hi]
-    unit = cm^2/g
     linterpol(E, E_lo => c_lo, E_hi => c_hi) * unit
 end

@@ -14,13 +14,22 @@ end
     unit = cm^2/g
     O = elements[8]
     @test mass_coeff(O, 1MeV, EnergyLoss()) == 0.02794unit
+    @test mass_coeff(O, 1MeV, EnergyLoss()) == 0.02794unit
     @test mass_coeff(O, 1MeV, TotalAttenuation()) == 6.372e-2unit
-    
+
     U = elements[92]
-    @test mass_coeff(U, 20MeV, TotalAttenuation()) == 6.512e-2unit
-    @test mass_coeff(U, 20MeV, EnergyLoss()) == 3.662e-2unit
+    # extremal energies
+    E_min = 0.001MeV
+    E_max = 20MeV
+    @test mass_coeff(U, E_min, TotalAttenuation()) == 6626.0unit
+    @test mass_coeff(U, E_min, EnergyLoss()) == 6612.0unit
+    
+    @test mass_coeff(U, E_max, TotalAttenuation()) == 6.512e-2unit
+    @test mass_coeff(U, E_max, EnergyLoss()) == 3.662e-2unit
+
     # absorption edge
-    E_K = 1.15606E-01MeV
+    E_K = 0.115606MeV
+    @test_throws ArgumentError mass_coeff(U, E_K, TotalAttenuation())
     E_K₋ = E_K - 1eV
     E_K₊ = E_K + 1eV
     @test mass_coeff(U, E_K₋, TotalAttenuation()) ≈ 1.378unit rtol=1e-2
@@ -31,9 +40,9 @@ end
 
 @testset "api" begin
     oxygen = elements[8];
-    mass_coeff(      oxygen,  1MeV, EnergyLoss())
-    mean_free_path(  oxygen,  1MeV, TotalAttenuation())
-    mean_free_path(  oxygen,  1MeV, TotalAttenuation(), density=1mg*cm^-3)
-    attenuation_coeff(oxygen, 10MeV, EnergyLoss())
-    cross_section(  oxygen,  1MeV, TotalAttenuation())
+    @inferred mass_coeff(      oxygen,  1MeV, EnergyLoss())
+    @inferred mean_free_path(  oxygen,  1MeV, TotalAttenuation())
+    @inferred mean_free_path(  oxygen,  1MeV, TotalAttenuation(), density=1mg*cm^-3)
+    @inferred attenuation_coeff(oxygen, 10MeV, EnergyLoss())
+    @inferred cross_section(  oxygen,  1MeV, TotalAttenuation())
 end
