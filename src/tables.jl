@@ -32,7 +32,7 @@ end
 
 _ustrip(unit, x::Quantity) = uconvert(NoUnits, x/unit)
 _ustrip(unit, x) = x
-lower(s::DataSource, E) = _ustrip(MeV, E)
+lower(s::DataSource, E) = Float64(_ustrip(MeV, E))
 lower(s::DataSource, Z::Int) = Z
 lower(s::DataSource, el::Element) = el.number
 

@@ -10,10 +10,10 @@ function load(::Type{FFASTData})
     FFASTData(data)
 end
 
-default_data_source(mat, E, ::EnergyAbsorption) = FFAST
+default_data_source(mat, E, ::EnergyLoss) = FFAST
 default_data_source(mat, E, ::TotalAttenuation) = FFAST
 
 const FFAST = load(FFASTData)
 
-lower(s::FFASTData,::EnergyAbsorption) = :mu_en
+lower(s::FFASTData,::EnergyLoss) = :mu_en
 lower(s::FFASTData,::TotalAttenuation) = :mu

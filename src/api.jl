@@ -1,6 +1,6 @@
 export mass_coeff, attenuation_coeff, mean_free_path, cross_section
 export FFAST
-export EnergyAbsorption, TotalAttenuation
+export EnergyLoss, TotalAttenuation
 
 """
     lookup_mass_coeff(s::DataSource, E::Energy, m::Element, p::Process)
@@ -11,20 +11,13 @@ abstract type DataSource end
 
 abstract type Process end
 
-struct EnergyAbsorption <: Process end
+struct EnergyLoss <: Process end
 struct TotalAttenuation <: Process end
 
 function mass_coeff(mat, E, p::Process,
-                    datasource=nothing)
-    mat0 = lower_material(mat)
-    E0 = lower_energy(E)
-    p0 = p
-    if datasource == nothing
-        datasource0 = default_data_source(mat0, E0, p0)
-    else
-        datasource0 = datasource
-    end
-    lookup_mass_coeff(datasource0, mat0, E0, p0)
+                    datasource = default_data_source(mat, E, p))
+
+    lookup_mass_coeff(datasource, mat, E, p)
 end
 
 function attenuation_coeff(mat, args...; density=density(mat), kw...)
