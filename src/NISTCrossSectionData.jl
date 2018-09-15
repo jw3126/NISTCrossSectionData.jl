@@ -2,6 +2,8 @@ module NISTCrossSectionData
 
 
 include("api.jl")
-include("mu_en.jl")
+include("tables.jl")
+include("ffast.jl")
+include("xcom.jl")
 
 end # module
