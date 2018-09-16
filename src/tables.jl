@@ -1,8 +1,6 @@
-using DataFrames
 using Unitful
 using Unitful: uconvert, NoUnits, cm, g, eV, MeV, u
 using PeriodicTable: Element
-import CSV
 
 function datapath(args...)
     datadir = joinpath(@__DIR__, "..", "data")
@@ -50,8 +48,8 @@ end
 function _lookup_mass_coeff(s::DataSource,Z::Int,E::Float64, col::Symbol)
     unit = cm^2/g
     table = s.tables[Z]
-    Es::Vector{Float64} = table[:E]
-    Cs::Vector{Float64} = table[col]
+    Es::Vector{Float64} = table.E
+    Cs::Vector{Float64} = getfield(table, col)
     E_min = first(Es)
     E_max = last(Es)
     @assert E_min <= E <= E_max
