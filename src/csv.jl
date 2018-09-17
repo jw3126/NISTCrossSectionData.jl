@@ -4,7 +4,7 @@ function readcsv!(io::IO, out::NamedTuple; header=nothing, sep=',')
         line = readline(io)
         pieces = split(line, sep)
         @assert length(pieces) == length(header) == ncols
-        @assert header == map(strip, pieces)
+        @argcheck collect(header) == map(strip, pieces)
     end
     while !eof(io)
         line = readline(io)

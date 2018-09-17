@@ -69,3 +69,30 @@ function _lookup_mass_coeff(s::DataSource,Z::Int,E::Float64, col::Symbol)
     c_hi = Cs[index_hi]
     linterpol(E, E_lo => c_lo, E_hi => c_hi) * unit
 end
+
+function columnnames(::Type{S}) where {S<:DataSource}
+    NT = eltype(first(S.types))
+    fieldnames(NT)
+end
+
+@generated function emptytable(::Type{S}) where {S <: DataSource}
+    args = map(columnnames(S)) do fn 
+        :($fn = Float64[])
+    end
+    Expr(:tuple, args...)
+end
+
+function lower(::DataSource, p::Process)::Symbol
+    Symbol(string(typeof(p)))
+end
+
+function load(::Type{S}; Zs, dir) where {S<:DataSource}
+    header = map(string, columnnames(S))
+    tables = asyncmap(Zs, ntasks=length(Zs)) do Z
+        path = datapath(dir,"Z$Z.csv")
+        out = emptytable(S)
+        readcsv!(path, out, header=header)
+    end
+    S(tables)
+end
+

@@ -1,9 +1,19 @@
+using InteractiveUtils
 export mass_coeff, attenuation_coeff, mean_free_path, cross_section
 export FFAST
-export EnergyLoss, TotalAttenuation
+export XCOM
+
+export EnergyLoss
+export TotalAttenuation
+export CoherentScattering
+export IncoherentScattering
+export PhotoelectricAbsorption
+export PairProductionNuclearField
+export PairProductionElectronField
+export TotalAttenuationWithoutCoherentScattering
 
 """
-    lookup_mass_coeff(s::DataSource, E::Energy, m::Element, p::Process)
+    lookup_mass_coeff(s::DataSource, E::E, m::Element, p::Process)
 
 Must be implemented.
 """
@@ -13,8 +23,15 @@ abstract type Process end
 
 struct EnergyLoss <: Process end
 struct TotalAttenuation <: Process end
+struct CoherentScattering <: Process end
+struct IncoherentScattering <: Process end
+struct PhotoelectricAbsorption <: Process end
+struct PairProductionNuclearField <: Process end
+struct PairProductionElectronField <: Process end
+struct TotalAttenuationWithoutCoherentScattering <: Process end
 
-function mass_coeff(mat, E, p::Process,
+
+function mass_coeff(mat, E, p::Process;
                     datasource = default_data_source(mat, E, p))
 
     lookup_mass_coeff(datasource, mat, E, p)

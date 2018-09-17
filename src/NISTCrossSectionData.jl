@@ -1,4 +1,5 @@
 module NISTCrossSectionData
+using ArgCheck
 
 
 include("api.jl")

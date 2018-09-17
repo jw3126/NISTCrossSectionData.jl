@@ -6,7 +6,7 @@ import CSV
 const TABLE_PRE  = "_________________"
 const TABLE_POST = "</PRE></TD>"
 
-function mu_en_url(Z::Int)
+function url(Z::Int)
     if Z < 10
         s = "0$Z"
     else
@@ -15,7 +15,7 @@ function mu_en_url(Z::Int)
     "https://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/z$(s).html"
 end
 
-function mu_en_parse_html(path)
+function parse_html(path)
     Es     = Float64[]
     mus    = Float64[]
     mus_en = Float64[]
@@ -48,17 +48,17 @@ function mu_en_parse_html(path)
     end
     @assert issorted(Es)
     @assert !isempty(Es)
-    df = DataFrame(:E => Es, :mu => mus, :mu_en => mus_en)
+    df = DataFrame(:E => Es, :TotalAttenuation => mus, :EnergyLoss => mus_en)
 end
 
-datadir = "../data/mass_energy_absorption"
-function mu_en_download(Z::Int, csvpath = joinpath(datadir, "Z$Z.csv"))
+datadir = "../../data/FFAST"
+function download_table(Z::Int, csvpath = joinpath(datadir, "Z$Z.csv"))
     df = Z |> 
-    mu_en_url |>
+    url |>
     download |>
-    mu_en_parse_html
+    parse_html
     mkpath(splitdir(csvpath)[1])
     CSV.write(csvpath, df)
 end
 
-asyncmap(mu_en_download, 1:92, ntasks=200)
+asyncmap(download_table, 1:92, ntasks=200)
