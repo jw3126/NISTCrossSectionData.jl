@@ -15,3 +15,10 @@ mean_free_path(  oxygen,  1MeV, TotalAttenuation())
 attenuation_coeff(oxygen, 10MeV, EnergyLoss())
 cross_section(  oxygen,  1MeV, EnergyLoss())
 ```
+
+## Datasets
+
+The following datasets taken from [NIST](https://www.nist.gov/) are available:
+
+* [FFAST](https://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html)
+* [XCOM](https://physics.nist.gov/PhysRefData/Xcom/html/xcom1.html)
