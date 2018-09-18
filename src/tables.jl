@@ -95,4 +95,3 @@ function load(::Type{S}; Zs, dir) where {S<:DataSource}
     end
     S(tables)
 end
-

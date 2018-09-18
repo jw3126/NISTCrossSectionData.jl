@@ -10,6 +10,14 @@ using Unitful: cm, g, mg, MeV, eV
     @test P.linterpol(2., 1=>10, 2=>20) ≈ 20
 end
 
+@testset "ESTAR" begin
+    unit = cm^2/g
+    O = elements[8]
+    E = 1MeV
+    @test mass_coeff(O, E, CSDA(),datasource=ESTAR     ) == 4.961E-01unit
+    @test mass_coeff(O, E, CSDA()) == 4.961E-01unit
+end
+
 @testset "FFAST" begin
     unit = cm^2/g
     O = elements[8]
