@@ -14,8 +14,16 @@ end
     unit = cm^2/g
     O = elements[8]
     E = 1MeV
-    @test mass_coeff(O, Electron(E), CSDA(),datasource=ESTAR     ) == 4.961E-01unit
-    @test mass_coeff(O, Electron(E), CSDA()) == 4.961E-01unit
+    @test mass_coeff(O, Electron(E), CSDA(),datasource=ESTAR) == 4.961E-01unit
+    @test mass_coeff(O, Electron(E), CSDA())                  == 4.961E-01unit
+
+    E_max = 1e3MeV
+    E_min = 1e-2*MeV
+    @test mass_coeff(O, Electron(E_max), CSDA(),datasource=ESTAR) == 9.454E+01unit
+    @test mass_coeff(O, Electron(E_min), CSDA(),datasource=ESTAR) == 2.950E-04unit
+    
+    Cf = elements[98]
+    @test mass_coeff(Cf, Electron(E), CSDA(),datasource=ESTAR) == 8.026E-01unit
 end
 
 @testset "FFAST" begin
@@ -40,6 +48,8 @@ end
         @test mass_coeff(V,E,PT(),datasource=XCOM) == value
         @test mass_coeff(V,E,PT()) == value
     end
+    Fm = elements[100]
+    @test mass_coeff(Fm, 1MeV, TotalAttenuation(), datasource=XCOM) == 0.08941*cm^2/g
 end
 
 @testset "mass_coeff" begin

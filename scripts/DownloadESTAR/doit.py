@@ -14,18 +14,40 @@ import os
 # 
 # browser.close()
 
+NAMES = ["ESTAR", "PSTAR", "ASTAR"]
+COLUMNS = {
+         "ESTAR" : "E Collision Radiative Total CSDA RadiationYield DensityEffect",
+         "ASTAR" : "E Electronic Nuclear Total CSDA Projected Detour",
+         "PSTAR" : "E Electronic Nuclear Total CSDA Projected Detour",
+        }
+
+XPATH_SUBMIT = {
+        "ESTAR" : "/html/body/form/p[4]/input[1]",
+        "PSTAR" : "/html/body/form/p[2]/input[2]",
+        "ASTAR" : "/html/body/form/p[2]/input[2]"
+        }
+
+BR_START = {
+        "ESTAR" : 10,
+        "PSTAR" : 15,
+        "ASTAR" : 15,
+        }
+
 class Crawler:
 
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
+        assert name in NAMES
         opts = Options()
         opts.set_headless()
         assert opts.headless  # operating in headless mode
         self.driver = Firefox(options=opts)
-        self.form_url = "https://physics.nist.gov/PhysRefData/Star/Text/ESTAR-t.html"
+        self.form_url = "https://physics.nist.gov/PhysRefData/Star/Text/{}-t.html".format(name)
+        self.columns = COLUMNS[name]
 
     def download_raw_string(self,Z):
         xpath_select = "/html/body/form/select/option[{}]".format(Z+1)
-        xpath_submit = "/html/body/form/p[4]/input[1]"
+        xpath_submit = XPATH_SUBMIT[self.name]
         self.get_url(self.form_url)
         self.get_xpath(xpath_select).click()
         self.get_xpath(xpath_submit).click()
@@ -34,15 +56,19 @@ class Crawler:
 
     def format_raw_string(self, raw):
         lines = raw.splitlines()
+
         table1 = lines[4]
         table2 = lines[5]
-        lines1 = table1.split("<br>")[10:-1]
+
+        start = BR_START[self.name]
+        lines1 = table1.split("<br>")[start:-1]
+        # for (i, line) in enumerate(lines1):
+        #     print(i, line)
         lines2 = table2.split("<br>")
         lines = lines1 + lines2
         lines = [l for l in lines if l.strip() != ""]
 
-        cols = "E Collision Radiative Total CSDA RadiationYield DensityEffect"
-        lines = [cols, *lines]
+        lines = [self.columns, *lines]
         lines = [", ".join(line.split()) for line in lines]
         s = "\n".join(lines)
         return s
@@ -82,13 +108,16 @@ class Crawler:
         print("reached url ", url)
         return ret
 
-    def download_all(self, dir="../../data/ESTAR"):
+    def download_all(self, dir=None):
+        if dir is None:
+            dir = "../../data/{}".format(self.name)
         os.makedirs(dir, exist_ok=True)
-        
-        for Z in range(1,101):
+
+        for Z in range(1,92):
             filename = "Z{}.csv".format(Z)
             path = os.path.join(dir, filename)
             self.download_and_save_csv(Z=Z, path=path)
 
 if __name__ == "__main__":
-    Crawler().download_all()
+    # ASTAR and PSTAR table enumeration is broken because of missing elements
+    Crawler("ESTAR").download_all()
