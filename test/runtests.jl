@@ -14,8 +14,8 @@ end
     unit = cm^2/g
     O = elements[8]
     E = 1MeV
-    @test mass_coeff(O, E, CSDA(),datasource=ESTAR     ) == 4.961E-01unit
-    @test mass_coeff(O, E, CSDA()) == 4.961E-01unit
+    @test mass_coeff(O, Electron(E), CSDA(),datasource=ESTAR     ) == 4.961E-01unit
+    @test mass_coeff(O, Electron(E), CSDA()) == 4.961E-01unit
 end
 
 @testset "FFAST" begin
@@ -76,4 +76,5 @@ end
     @inferred mean_free_path(  oxygen,  1MeV, TotalAttenuation(), density=1mg*cm^-3)
     @inferred attenuation_coeff(oxygen, 10MeV, EnergyLoss())
     @inferred cross_section(  oxygen,  1MeV, TotalAttenuation())
+    @inferred lookup( oxygen, 1MeV, CoherentScattering())
 end

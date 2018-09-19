@@ -1,5 +1,5 @@
 using InteractiveUtils
-export mass_coeff, attenuation_coeff, mean_free_path, cross_section
+export mass_coeff, attenuation_coeff, mean_free_path, cross_section, lookup
 export FFAST
 export XCOM
 export ESTAR
@@ -20,14 +20,30 @@ export CSDA
 export RadiationYield
 export DensityEffect
 
+export Photon, Proton, Electron, Alpha
+
 """
-    lookup_mass_coeff(s::DataSource, E::E, m::Element, p::Process)
+    lookup(s::DataSource, E::E, m::Element, p::Process)
 
 Must be implemented.
 """
 abstract type DataSource end
 
 abstract type Process end
+
+abstract type Particle end
+struct Photon <: Particle
+    energy::typeof(1.0MeV)
+end
+struct Electron <: Particle
+    energy::typeof(1.0MeV)
+end
+struct Proton <: Particle
+    energy::typeof(1.0MeV)
+end
+struct Alpha <: Particle
+    energy::typeof(1.0MeV)
+end
 
 # FFAST
 struct EnergyLoss <: Process end
@@ -44,16 +60,30 @@ struct TotalAttenuationWithoutCoherentScattering <: Process end
 # ESTAR
 struct Collision      <: Process end
 struct Radiative      <: Process end
+"""
+    Total
+
+Total stopping power.
+"""
 struct Total          <: Process end # merge with TotalAttenuation?
 struct CSDA           <: Process end
+"""
+    RadiationYield
+
+Fraction of energy converted into Bremsstrahlung photons.
+"""
 struct RadiationYield <: Process end
 struct DensityEffect  <: Process end
 
+function lookup(mat, pt, proc::Process)
+    s = default_data_source(mat, pt, proc)
+    lookup(s, mat, pt, proc)
+end
 
-function mass_coeff(mat, E, p::Process;
-                    datasource = default_data_source(mat, E, p))
+function mass_coeff(mat, pt, proc::Process;
+                    datasource = default_data_source(mat, pt, proc))
 
-    lookup_mass_coeff(datasource, mat, E, p)
+    lookup(datasource, mat, pt, proc)
 end
 
 function attenuation_coeff(mat, args...; density=density(mat), kw...)
@@ -66,8 +96,8 @@ function cross_section(mat, args...; kw...)
     uconvert(cm^2, q)
 end
 
-function stopping_power(mat, E, p::Process; datasource=default_data_source(mat,E,p))
-    q = lookup_stopping_power(datasource,mat,E,p)
+function stopping_power(mat, pt, proc::Process; datasource=default_data_source(mat,E,proc))
+    q = lookup_stopping_power(datasource,mat,pt,proc)
     uconvert(MeV*cm^2/g, q)
 end
 

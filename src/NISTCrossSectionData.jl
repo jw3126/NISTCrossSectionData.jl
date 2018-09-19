@@ -1,6 +1,14 @@
+__precompile__(false)
 module NISTCrossSectionData
 using ArgCheck
+using Unitful
+const UF = Unitful
+using Unitful: MeV, g, cm
 
+const uenergy  = MeV
+const umassatt = cm^2/g
+const ustoppow = uenergy * umassatt
+const unone    = Unitful.NoUnits
 
 include("api.jl")
 include("tables.jl")

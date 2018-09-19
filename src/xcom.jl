@@ -1,15 +1,22 @@
-struct  XCOMData  <: DataSource 
-    tables::Vector{NamedTuple{(
-    :E, 
-    :CoherentScattering,
-    :IncoherentScattering,
-    :PhotoelectricAbsorption,
-    :PairProductionNuclearField,
-    :PairProductionElectronField,
-    :TotalAttenuation,
-    :TotalAttenuationWithoutCoherentScattering),NTuple{8,Array{Float64,1}}}}
+function empty_xcom_table()
+    (
+     E                                        = empty_col(uenergy ),
+     CoherentScattering                       = empty_col(umassatt),
+    IncoherentScattering                      = empty_col(umassatt),
+    PhotoelectricAbsorption                   = empty_col(umassatt),
+    PairProductionNuclearField                = empty_col(umassatt),
+    PairProductionElectronField               = empty_col(umassatt),
+    TotalAttenuation                          = empty_col(umassatt),
+    TotalAttenuationWithoutCoherentScattering = empty_col(umassatt),
+    )
 end
-# 
+
+struct  XCOMData  <: DataSource 
+    tables::Vector{typeof(empty_xcom_table())}
+end
+
+emptytable(::Type{XCOMData}) = empty_xcom_table()
+
 const XCOM  = load(XCOMData, Zs=1:100, dir=datapath("XCOM"))
 
 for P in columnnames(XCOMData)

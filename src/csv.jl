@@ -1,5 +1,15 @@
-function readcsv!(io::IO, out::NamedTuple; header=nothing, sep=',')
-    ncols = length(out)
+colcount(table) = length(table)
+
+function addrow!(table, row)
+    @assert colcount(table) == length(row)
+    foreach(table, row) do col, val
+        push!(col, val*unit(eltype(col)))
+    end
+    table
+end
+
+function readcsv!(io::IO, table::NamedTuple; header=nothing, sep=',')
+    ncols = colcount(table)
     if header != nothing
         line = readline(io)
         pieces = split(line, sep)
@@ -9,14 +19,11 @@ function readcsv!(io::IO, out::NamedTuple; header=nothing, sep=',')
     while !eof(io)
         line = readline(io)
         pieces = split(line, sep)
-        @assert length(pieces) == length(out)
-        for i in 1:ncols
-            x = parse(Float64, popfirst!(pieces))
-            push!(out[i], x)
-        end
-        @assert isempty(pieces)
+        @assert length(pieces) == ncols
+        vals = map(s -> parse(Float64, s), pieces)
+        addrow!(table, vals)
     end
-    out
+    table
 end
 
 function readcsv!(path::AbstractString, out::NamedTuple; kw...)

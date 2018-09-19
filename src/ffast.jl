@@ -1,7 +1,14 @@
-struct FFASTData <: DataSource 
-    tables::Vector{NamedTuple{(:E, :TotalAttenuation, :EnergyLoss),NTuple{3,Array{Float64,1}}}}
+function empty_ffast_table()
+    (E                = empty_col(uenergy ), 
+     TotalAttenuation = empty_col(umassatt),
+     EnergyLoss       = empty_col(umassatt))
 end
 
+struct FFASTData <: DataSource 
+    tables::Vector{typeof(empty_ffast_table())}
+end
+
+emptytable(::Type{FFASTData}) = empty_ffast_table()
 
 const FFAST = load(FFASTData, Zs=1:92, dir=datapath("FFAST"))
 
