@@ -4,7 +4,7 @@ function empty_estar_table()
     Collision     = empty_col(ustoppow),
     Radiative     = empty_col(ustoppow),
     Total         = empty_col(ustoppow),
-    CSDA          = empty_col(umassatt),
+    CSDA          = empty_col(umassrange),
     RadiationYield= empty_col(unone   ),
     DensityEffect = empty_col(unone   ),
    )

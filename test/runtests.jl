@@ -11,19 +11,19 @@ using Unitful: cm, g, mg, MeV, eV
 end
 
 @testset "ESTAR" begin
-    unit = cm^2/g
+    unit = g/cm^2
     O = elements[8]
     E = 1MeV
-    @test mass_coeff(O, Electron(E), CSDA(),datasource=ESTAR) == 4.961E-01unit
-    @test mass_coeff(O, Electron(E), CSDA())                  == 4.961E-01unit
+    @test lookup(O, Electron(E), CSDA()) == 4.961E-01unit
+    @test lookup(ESTAR, O, Electron(E), CSDA())                  == 4.961E-01unit
 
     E_max = 1e3MeV
     E_min = 1e-2*MeV
-    @test mass_coeff(O, Electron(E_max), CSDA(),datasource=ESTAR) == 9.454E+01unit
-    @test mass_coeff(O, Electron(E_min), CSDA(),datasource=ESTAR) == 2.950E-04unit
+    @test lookup(ESTAR, O, Electron(E_max), CSDA()) == 9.454E+01unit
+    @test lookup(ESTAR, O, Electron(E_min), CSDA()) == 2.950E-04unit
     
     Cf = elements[98]
-    @test mass_coeff(Cf, Electron(E), CSDA(),datasource=ESTAR) == 8.026E-01unit
+    @test lookup(ESTAR, Cf, Electron(E), CSDA()) == 8.026E-01unit
 end
 
 @testset "FFAST" begin

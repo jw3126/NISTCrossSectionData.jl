@@ -7,6 +7,7 @@ using Unitful: MeV, g, cm
 
 const uenergy  = MeV
 const umassatt = cm^2/g
+const umassrange = inv(umassatt)
 const ustoppow = uenergy * umassatt
 const unone    = Unitful.NoUnits
 

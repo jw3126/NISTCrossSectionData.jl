@@ -102,3 +102,5 @@ function stopping_power(mat, pt, proc::Process; datasource=default_data_source(m
 end
 
 mean_free_path(args...;kw...) = uconvert(cm, 1 / attenuation_coeff(args...; kw...))
+
+# function range
