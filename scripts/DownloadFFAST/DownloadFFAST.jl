@@ -51,7 +51,7 @@ function parse_html(path)
     df = DataFrame(:E => Es, :TotalAttenuation => mus, :EnergyLoss => mus_en)
 end
 
-datadir = "../../data/FFAST"
+datadir = "../../data/XAAMDI"
 function download_table(Z::Int, csvpath = joinpath(datadir, "Z$Z.csv"))
     df = Z |> 
     url |>

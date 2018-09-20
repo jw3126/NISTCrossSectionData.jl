@@ -4,12 +4,12 @@ function empty_ffast_table()
      EnergyLoss       = empty_col(umassatt))
 end
 
-struct FFASTData <: DataSource 
+struct XAAMDIData <: DataSource 
     tables::Vector{typeof(empty_ffast_table())}
 end
 
-emptytable(::Type{FFASTData}) = empty_ffast_table()
+emptytable(::Type{XAAMDIData}) = empty_ffast_table()
 
-const FFAST = load(FFASTData, Zs=1:92, dir=datapath("FFAST"))
+const XAAMDI = load(XAAMDIData, Zs=1:92, dir=datapath("XAAMDI"))
 
-default_data_source(mat, E, ::EnergyLoss) = FFAST
+default_data_source(mat, E, ::EnergyLoss) = XAAMDI

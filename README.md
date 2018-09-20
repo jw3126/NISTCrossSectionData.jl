@@ -20,5 +20,6 @@ cross_section(  oxygen,  1MeV, EnergyLoss())
 
 The following datasets taken from [NIST](https://www.nist.gov/) are available:
 
-* [FFAST](https://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html)
+* [XAAMDI](https://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html)
 * [XCOM](https://physics.nist.gov/PhysRefData/Xcom/html/xcom1.html)
+* [ESTAR](https://physics.nist.gov/PhysRefData/Star/Text/ESTAR.html)

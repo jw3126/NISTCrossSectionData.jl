@@ -1,6 +1,6 @@
 using InteractiveUtils
 export mass_coeff, attenuation_coeff, mean_free_path, cross_section, lookup
-export FFAST
+export XAAMDI
 export XCOM
 export ESTAR
 
@@ -45,7 +45,7 @@ struct Alpha <: Particle
     energy::typeof(1.0MeV)
 end
 
-# FFAST
+# XAAMDI
 struct EnergyLoss <: Process end
 struct TotalAttenuation <: Process end
 

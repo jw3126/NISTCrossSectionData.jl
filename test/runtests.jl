@@ -26,11 +26,11 @@ end
     @test lookup(ESTAR, Cf, Electron(E), CSDA()) == 8.026E-01unit
 end
 
-@testset "FFAST" begin
+@testset "XAAMDI" begin
     unit = cm^2/g
     O = elements[8]
     E = 1MeV
-    @test mass_coeff(O, E, EnergyLoss(),datasource=FFAST     ) == 0.02794unit
+    @test mass_coeff(O, E, EnergyLoss(),datasource=XAAMDI     ) == 0.02794unit
     @test mass_coeff(O, E, EnergyLoss()) == 0.02794unit
 end
 @testset "XCOM" begin
@@ -62,21 +62,21 @@ end
     # extremal energies
     E_min = 0.001MeV
     E_max = 20MeV
-    @test mass_coeff(U, E_min, TotalAttenuation(), datasource=FFAST) == 6626.0unit
+    @test mass_coeff(U, E_min, TotalAttenuation(), datasource=XAAMDI) == 6626.0unit
     @test mass_coeff(U, E_min, EnergyLoss()) == 6612.0unit
     
-    @test mass_coeff(U, E_max, TotalAttenuation(), datasource=FFAST) == 6.512e-2unit
+    @test mass_coeff(U, E_max, TotalAttenuation(), datasource=XAAMDI) == 6.512e-2unit
     @test mass_coeff(U, E_max, EnergyLoss()) == 3.662e-2unit
 
     # absorption edge
     E_K = 0.115606MeV
-    @test_throws ArgumentError mass_coeff(U, E_K, TotalAttenuation(), datasource=FFAST)
+    @test_throws ArgumentError mass_coeff(U, E_K, TotalAttenuation(), datasource=XAAMDI)
     E_K₋ = E_K - 1eV
     E_K₊ = E_K + 1eV
-    @test mass_coeff(U, E_K₋, TotalAttenuation(), datasource=FFAST) ≈ 1.378unit rtol=1e-2
-    @test mass_coeff(U, E_K₋, EnergyLoss(), datasource=FFAST)       ≈ 1.027unit rtol=1e-2
-    @test mass_coeff(U, E_K₊, TotalAttenuation(), datasource=FFAST) ≈ 4.893unit rtol=1e-2
-    @test mass_coeff(U, E_K₊, EnergyLoss(), datasource=FFAST)       ≈ 1.382unit rtol=1e-2
+    @test mass_coeff(U, E_K₋, TotalAttenuation(), datasource=XAAMDI) ≈ 1.378unit rtol=1e-2
+    @test mass_coeff(U, E_K₋, EnergyLoss(), datasource=XAAMDI)       ≈ 1.027unit rtol=1e-2
+    @test mass_coeff(U, E_K₊, TotalAttenuation(), datasource=XAAMDI) ≈ 4.893unit rtol=1e-2
+    @test mass_coeff(U, E_K₊, EnergyLoss(), datasource=XAAMDI)       ≈ 1.382unit rtol=1e-2
 end
 
 @testset "api" begin
