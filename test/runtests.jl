@@ -87,4 +87,10 @@ end
     @inferred attenuation_coeff(oxygen, 10MeV, EnergyLoss())
     @inferred cross_section(  oxygen,  1MeV, TotalAttenuation())
     @inferred lookup( oxygen, 1MeV, CoherentScattering())
+
+    proc = CoherentScattering()
+    pt = 1MeV
+    @test lookup(oxygen, pt, proc) == lookup(:O, pt, proc)
+    @test lookup(oxygen, pt, proc) == lookup("oxygen", pt, proc)
+    @test lookup(oxygen, pt, proc) == lookup(8, pt, proc)
 end

@@ -1,14 +1,11 @@
 using Unitful
 using Unitful: uconvert, NoUnits, cm, g, eV, MeV, u
-using PeriodicTable: Element
+using PeriodicTable: Element, elements
 
 function datapath(args...)
     datadir = joinpath(@__DIR__, "..", "data")
     abspath(joinpath(datadir, args...))
 end
-lower_material(Z::Int) = Z
-lower_material(el::Element) = el.number
-lower_energy(E) = Float64(uconvert(NoUnits, E/MeV))
 
 _ucoalesce(unit, q::Quantity) = uconvert(unit, q)
 _ucoalesce(unit, x::Number  ) = x*unit
@@ -33,15 +30,19 @@ function linterpol(x, (x_lo, y_lo), (x_hi, y_hi))
     y_lo * w_lo + y_hi * w_hi
 end
 
-lower(s::DataSource, Z::Int)       = Z
-lower(s::DataSource, el::Element)  = el.number
-lower(s::DataSource, pt::Particle) = pt.energy
-lower(s::DataSource, E::UF.Energy) = E
+lower_material(s::DataSource, Z::Int)       = Z
+lower_material(s::DataSource, el::Element)  = el.number
+function lower_material(s::DataSource, key::Union{String, Symbol}) 
+    elements[key].number
+end
+
+lower_particle(s::DataSource, pt::Particle) = pt.energy
+lower_particle(s::DataSource, E::UF.Energy) = E
 
 function lookup(s::DataSource,
                            mat, pt, p)
-    E = lower(s, pt)
-    Z   = lower(s, mat)
+    E = lower_particle(s, pt)
+    Z   = lower_material(s, mat)
     _lookup(s, Z, E, p)
 end
 
