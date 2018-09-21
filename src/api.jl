@@ -19,6 +19,7 @@ export Total
 export CSDA
 export RadiationYield
 export DensityEffect
+export transmission
 
 export Photon, Proton, Electron, Alpha
 
@@ -102,3 +103,10 @@ function stopping_power(mat, pt, proc::Process; datasource=default_data_source(m
 end
 
 mean_free_path(args...;kw...) = uconvert(cm, 1 / attenuation_coeff(args...; kw...))
+
+function transmission(mat, pt, proc::Process=EnergyLoss(); length, kw...)
+    charlen = mean_free_path(mat, pt, proc; kw...)
+    tau = uconvert(NoUnits, length/charlen)
+    exp(-tau)
+end
+

@@ -13,9 +13,12 @@ _ucoalesce(unit, x::Number  ) = x*unit
 _ustrip(x::Quantity) = uconvert(UF.NoUnits, x)
 _ustrip(x) = x
 
-function density(el::Element)
+function density(mat)
+    el = aselement(mat)
     _ucoalesce(g*cm^-3, el.density)
 end
+aselement(el::Element) = el
+aselement(key) = elements[key]
 
 function linterpol(x, (x_lo, y_lo), (x_hi, y_hi))
     @assert x_lo <= x <= x_hi
@@ -31,10 +34,7 @@ function linterpol(x, (x_lo, y_lo), (x_hi, y_hi))
 end
 
 lower_material(s::DataSource, Z::Int)       = Z
-lower_material(s::DataSource, el::Element)  = el.number
-function lower_material(s::DataSource, key::Union{String, Symbol}) 
-    elements[key].number
-end
+lower_material(s::DataSource, mat) = aselement(mat).number
 
 lower_particle(s::DataSource, pt::Particle) = pt.energy
 lower_particle(s::DataSource, E::UF.Energy) = E

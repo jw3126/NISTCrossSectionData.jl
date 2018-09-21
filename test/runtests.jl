@@ -84,6 +84,8 @@ end
     @inferred mass_coeff(      oxygen,  1MeV, EnergyLoss())
     @inferred mean_free_path(  oxygen,  1MeV, TotalAttenuation())
     @inferred mean_free_path(  oxygen,  1MeV, TotalAttenuation(), density=1mg*cm^-3)
+    @inferred transmission(  oxygen,  1MeV, TotalAttenuation(), length=1cm)
+    @inferred transmission(  :O,  1MeV, TotalAttenuation(), length=1cm)
     @inferred attenuation_coeff(oxygen, 10MeV, EnergyLoss())
     @inferred cross_section(  oxygen,  1MeV, TotalAttenuation())
     @inferred lookup( oxygen, 1MeV, CoherentScattering())
