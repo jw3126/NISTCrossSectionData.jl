@@ -24,6 +24,21 @@ end
     
     Cf = elements[98]
     @test lookup(ESTAR, Cf, Electron(E), CSDA()) == 8.026E-01unit
+
+    pt = Electron(1MeV)
+    mat = :Si
+    for (proc, value) in [
+        (Collision(), 1.507MeV*cm^2/g)
+        (Radiative(), 2.360E-02*MeV*cm^2/g)
+        (Total(), 1.531E+00*MeV*cm^2/g)
+        (CSDA(), 5.386E-01*g*cm^-2)
+        (RadiationYield(), 8.275E-03)
+        (DensityEffect(), 3.424E-01)
+            ]
+
+        @test lookup(mat, pt, proc) ≈ value
+        @test lookup(ESTAR, mat, pt, proc) ≈ value
+    end
 end
 
 @testset "XAAMDI" begin

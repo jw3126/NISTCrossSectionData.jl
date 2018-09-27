@@ -17,4 +17,7 @@ emptytable(::Type{ESTARData}) = empty_estar_table()
 
 const ESTAR  = load(ESTARData, Zs=1:100, dir=datapath("ESTAR"))
 
-default_data_source(mat, pt::Electron, ::CSDA) = ESTAR
+for P in columnnames(ESTARData)
+    P == :E && continue
+    @eval default_data_source(mat, pt::Electron, ::$P) = ESTAR
+end
