@@ -1,4 +1,3 @@
-__precompile__(false)
 module NISTCrossSectionData
 using ArgCheck
 using Unitful

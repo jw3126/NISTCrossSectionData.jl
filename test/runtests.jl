@@ -110,4 +110,6 @@ end
     @test lookup(oxygen, pt, proc) == lookup(:O, pt, proc)
     @test lookup(oxygen, pt, proc) == lookup("oxygen", pt, proc)
     @test lookup(oxygen, pt, proc) == lookup(8, pt, proc)
+    @test lookup(oxygen, pt, TotalAttenuation()) ==
+        lookup(8, pt, TotalAttenuation())
 end

@@ -87,8 +87,11 @@ function columnnames(::Type{S}) where {S<:DataSource}
     fieldnames(NT)
 end
 
+function get_process_symbol(p)::Symbol
+    Symbol(last(split(string(p), ".")))
+end
 @generated function getcol(table, process::P) where {P}
-    s = Symbol(string(process))
+    s = get_process_symbol(process)
     :(table.$s)
 end
 
