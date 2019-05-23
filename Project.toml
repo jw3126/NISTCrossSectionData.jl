@@ -1,0 +1,13 @@
+name = "NISTCrossSectionData"
+uuid = "93667b55-97ee-56ad-9fd3-9e751949baeb"
+version = "0.1.0"
+
+[deps]
+ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+PeriodicTable = "7b2266bf-644c-5ea3-82d8-af4bbd25a884"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+
+[compat]
+julia = "≥ 0.7.0"
