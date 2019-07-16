@@ -10,6 +10,8 @@ const umassrange = inv(umassatt)
 const ustoppow = uenergy * umassatt
 const unone    = Unitful.NoUnits
 
+export MeV, g, cm
+
 include("api.jl")
 include("tables.jl")
 include("csv.jl")

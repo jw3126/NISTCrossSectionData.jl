@@ -102,7 +102,7 @@ function stopping_power(mat, pt, proc::Process; datasource=default_data_source(m
     uconvert(MeV*cm^2/g, q)
 end
 
-mean_free_path(args...;kw...) = uconvert(cm, 1 / attenuation_coeff(args...; kw...))
+mean_free_path(mat, pt, proc::Process;kw...) = uconvert(cm, 1 / attenuation_coeff(mat, pt, proc; kw...))
 
 function transmission(mat, pt, proc::Process=EnergyLoss(); length, kw...)
     charlen = mean_free_path(mat, pt, proc; kw...)
