@@ -11,13 +11,25 @@ function empty_xcom_table()
     )
 end
 
-struct  XCOMData  <: DataSource 
-    tables::Vector{typeof(empty_xcom_table())}
+const XCOMTable = typeof(empty_xcom_table())
+struct XCOMData  <: DataSource
+    element_tables::Vector{XCOMTable}
+    compound_tables::Dict{Symbol, XCOMTable}
 end
 
 emptytable(::Type{XCOMData}) = empty_xcom_table()
 
-const XCOM  = load(XCOMData, Zs=1:100, dir=datapath("XCOM"))
+const XCOM  = load(XCOMData, Zs=1:100, compounds=[:H2O],
+                   dir=datapath("XCOM"))
+
+function get_table(s::XCOMData, key::Symbol)::XCOMTable
+    res = get(s.compound_tables, key, nothing)
+    if res === nothing
+        get_element_table(s, key)
+    else
+        res
+    end
+end
 
 for P in columnnames(XCOMData)
     P == :E && continue

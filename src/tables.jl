@@ -22,7 +22,7 @@ aselement(key) = elements[key]
 
 function linterpol(x, (x_lo, y_lo), (x_hi, y_hi))
     @assert x_lo <= x <= x_hi
-    if x_lo == x_hi 
+    if x_lo == x_hi
         @assert y_lo == y_hi
         return y_lo
     end
@@ -42,12 +42,19 @@ lower_particle(s::DataSource, E::UF.Energy) = E
 function lookup(s::DataSource,
                            mat, pt, p)
     E = lower_particle(s, pt)
-    Z   = lower_material(s, mat)
-    _lookup(s, Z, E, p)
+    _lookup(s, mat, E, p)
 end
 
-function _lookup(s::DataSource,Z::Int,E::UF.Energy, p::Process)
-    table = s.tables[Z]
+function get_table(s::DataSource, key)
+    get_element_table(s, key)
+end
+function get_element_table(s::DataSource, key)
+    Z = lower_material(s, key)
+    s.element_tables[Z]
+end
+
+function _lookup(s::DataSource,mat,E::UF.Energy, p::Process)
+    table = get_table(s, mat)
     Es = table.E
     Cs = getcol(table, p)
     E_min = first(Es)
@@ -62,7 +69,7 @@ function _lookup(s::DataSource,Z::Int,E::UF.Energy, p::Process)
     absorption_edge = (E == E_hi) &&
         (get(Es, index_hi+1, nothing) == E_hi)
     if absorption_edge
-        msg = "Element Z=$Z has an absorption edge at E=$(E)."
+        msg = "Material $mat has an absorption edge at E=$(E)."
         throw(ArgumentError(msg))
     end
     c_lo = Cs[index_lo]
@@ -97,12 +104,21 @@ end
 
 empty_col(u) = typeof(1.0*u)[]
 
-function load(::Type{S}; Zs, dir) where {S<:DataSource}
+function load(::Type{S}; Zs, compounds=nothing, dir)::S where {S<:DataSource}
     header = map(string, columnnames(S))
-    tables = asyncmap(Zs, ntasks=length(Zs)) do Z
+    element_tables = asyncmap(Zs, ntasks=length(Zs)) do Z
         path = datapath(dir,"Z$Z.csv")
         out = emptytable(S)
         readcsv!(path, out, header=header)
     end
-    S(tables)
+    if compounds === nothing
+        S(element_tables)
+    else
+        compound_pairs = asyncmap(compounds) do compound
+            path = datapath(dir, "$compound.csv")
+            compound => readcsv!(path, emptytable(S), header=header)
+        end
+        compound_tables = Dict(compound_pairs...)
+        S(element_tables, compound_tables)
+    end
 end

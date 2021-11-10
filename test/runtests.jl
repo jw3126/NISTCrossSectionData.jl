@@ -21,7 +21,7 @@ end
     E_min = 1e-2*MeV
     @test lookup(ESTAR, O, Electron(E_max), CSDA()) == 9.454E+01unit
     @test lookup(ESTAR, O, Electron(E_min), CSDA()) == 2.950E-04unit
-    
+
     Cf = elements[98]
     @test lookup(ESTAR, Cf, Electron(E), CSDA()) == 8.026E-01unit
 
@@ -65,6 +65,8 @@ end
     end
     Fm = elements[100]
     @test mass_coeff(Fm, 1MeV, TotalAttenuation(), datasource=XCOM) == 0.08941*cm^2/g
+
+    @test mass_coeff(:H2O, 1MeV, TotalAttenuation()) == 0.07072cm^2/g
 end
 
 @testset "mass_coeff" begin
@@ -79,7 +81,7 @@ end
     E_max = 20MeV
     @test mass_coeff(U, E_min, TotalAttenuation(), datasource=XAAMDI) == 6626.0unit
     @test mass_coeff(U, E_min, EnergyLoss()) == 6612.0unit
-    
+
     @test mass_coeff(U, E_max, TotalAttenuation(), datasource=XAAMDI) == 6.512e-2unit
     @test mass_coeff(U, E_max, EnergyLoss()) == 3.662e-2unit
 

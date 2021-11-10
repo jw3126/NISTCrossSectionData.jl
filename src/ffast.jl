@@ -1,11 +1,11 @@
 function empty_ffast_table()
-    (E                = empty_col(uenergy ), 
+    (E                = empty_col(uenergy ),
      TotalAttenuation = empty_col(umassatt),
      EnergyLoss       = empty_col(umassatt))
 end
 
-struct XAAMDIData <: DataSource 
-    tables::Vector{typeof(empty_ffast_table())}
+struct XAAMDIData <: DataSource
+    element_tables::Vector{typeof(empty_ffast_table())}
 end
 
 emptytable(::Type{XAAMDIData}) = empty_ffast_table()

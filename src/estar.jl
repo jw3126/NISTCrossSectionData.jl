@@ -10,8 +10,8 @@ function empty_estar_table()
    )
 end
 
-struct ESTARData  <: DataSource 
-    tables::Vector{typeof(empty_estar_table())}
+struct ESTARData  <: DataSource
+    element_tables::Vector{typeof(empty_estar_table())}
 end
 emptytable(::Type{ESTARData}) = empty_estar_table()
 
