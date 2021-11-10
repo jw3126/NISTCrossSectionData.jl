@@ -47,6 +47,8 @@ end
     E = 1MeV
     @test mass_coeff(O, E, EnergyLoss(),datasource=XAAMDI     ) == 0.02794unit
     @test mass_coeff(O, E, EnergyLoss()) == 0.02794unit
+
+    @test mass_coeff(:H2O, 1MeV, EnergyLoss()) == 3.103E-02*cm^2/g
 end
 @testset "XCOM" begin
     unit = cm^2/g

@@ -15,7 +15,7 @@ export MeV, g, cm
 include("api.jl")
 include("tables.jl")
 include("csv.jl")
-include("ffast.jl")
+include("xaamdi.jl")
 include("xcom.jl")
 include("estar.jl")
 
